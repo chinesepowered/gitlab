@@ -1,0 +1,145 @@
+apiVersion: gitlab.com/v1
+kind: Component
+metadata:
+  name: ai-code-review
+  description: AI-Powered Code Review using Gemini 2.5 Flash for GitLab CI/CD pipelines
+  labels:
+    category: Security, Quality, AI
+    stage: review, analysis
+    maturity: stable
+  annotations:
+    gitlab.com/hackathon-submission: "true"
+    gitlab.com/component-version: "1.0.0"
+    gitlab.com/documentation-url: "https://gitlab.com/your-namespace/ai-code-review/-/blob/main/README.md"
+    gitlab.com/source-url: "https://gitlab.com/your-namespace/ai-code-review"
+spec:
+  type: ci-template
+  lifecycle: active
+  owner: team-ai-review
+  inputs:
+    - name: gemini_api_key
+      description: Google Cloud API key for Gemini 2.5 Flash access
+      type: string
+      required: true
+      sensitive: true
+    - name: gitlab_token
+      description: GitLab access token for posting MR comments
+      type: string
+      required: true
+      sensitive: true
+    - name: review_scope
+      description: Scope of review (changed/all)
+      type: string
+      default: "changed"
+      enum: ["changed", "all"]
+    - name: max_files
+      description: Maximum number of files to review
+      type: number
+      default: 50
+      minimum: 1
+      maximum: 200
+    - name: languages
+      description: Programming languages to review (comma-separated)
+      type: string
+      default: "python,javascript,typescript,java,go,rust,cpp,csharp,php,ruby"
+    - name: severity_threshold
+      description: Minimum severity level for posting comments
+      type: string
+      default: "medium"
+      enum: ["low", "medium", "high"]
+    - name: enable_security_scan
+      description: Enable security vulnerability scanning
+      type: boolean
+      default: true
+    - name: enable_performance_hints
+      description: Enable performance optimization suggestions
+      type: boolean
+      default: true
+    - name: post_mr_comments
+      description: Post review comments on merge request
+      type: boolean
+      default: true
+    - name: generate_report
+      description: Generate detailed review report as artifact
+      type: boolean
+      default: true
+  outputs:
+    - name: review_report
+      description: HTML report with detailed review results
+      type: artifact
+      path: "ai-review-report.html"
+    - name: review_summary
+      description: JSON summary of review results
+      type: artifact
+      path: "ai-review-summary.json"
+    - name: junit_results
+      description: JUnit XML results for GitLab CI integration
+      type: test-report
+      path: "ai-review-results.xml"
+  dependencies:
+    - google-generativeai>=0.8.0
+    - python-gitlab>=4.0.0
+    - requests>=2.25.0
+  examples:
+    - name: basic-usage
+      description: Basic AI code review setup
+      config: |
+        include:
+          - component: gitlab.com/your-namespace/ai-code-review@main
+        
+        ai-code-review:
+          extends: .ai-code-review
+          variables:
+            GEMINI_API_KEY: $GEMINI_API_KEY
+            GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+    - name: security-focused
+      description: Security-focused review configuration
+      config: |
+        ai-code-review:
+          extends: .ai-code-review
+          variables:
+            GEMINI_API_KEY: $GEMINI_API_KEY
+            GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+            SEVERITY_THRESHOLD: "low"
+            ENABLE_SECURITY_SCAN: "true"
+            ENABLE_PERFORMANCE_HINTS: "false"
+            INCLUDE_PATTERNS: "src/,lib/,config/"
+  tags:
+    - ai
+    - code-review
+    - security
+    - quality
+    - gemini
+    - automation
+    - ci-cd
+    - hackathon
+  readme: |
+    # AI-Powered Code Review
+    
+    Intelligent code review component powered by Google's Gemini 2.5 Flash model for GitLab CI/CD pipelines.
+    
+    ## Features
+    - 🤖 AI-powered analysis using Gemini 2.5 Flash
+    - 🔍 Multi-language support (10+ languages)
+    - 🛡️ Security vulnerability detection
+    - ⚡ Performance optimization suggestions
+    - 💬 Automated MR comments
+    - 📊 Detailed HTML and JSON reports
+    - 🔧 Highly configurable
+    
+    ## Quick Start
+    ```yaml
+    include:
+      - component: gitlab.com/your-namespace/ai-code-review@main
+    
+    ai-code-review:
+      extends: .ai-code-review
+      variables:
+        GEMINI_API_KEY: $GEMINI_API_KEY
+        GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+    ```
+    
+    ## GitLab Hackathon
+    This component is submitted as part of the GitLab Hackathon to enhance the GitLab ecosystem with AI-powered development tools.
+    
+    For detailed documentation, visit: [Setup Guide](docs/SETUP.md) 

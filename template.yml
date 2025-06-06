@@ -1,0 +1,107 @@
+spec:
+  inputs:
+    gemini_api_key:
+      description: "Google Cloud API key for Gemini 2.5 Flash access"
+      type: string
+      required: true
+    gitlab_token:
+      description: "GitLab access token for posting MR comments"
+      type: string
+      required: true
+    review_scope:
+      description: "Scope of review: 'changed' for only changed files or 'all' for all files"
+      type: string
+      default: "changed"
+    max_files:
+      description: "Maximum number of files to review"
+      type: number
+      default: 50
+    languages:
+      description: "Comma-separated list of programming languages to review"
+      type: string
+      default: "python,javascript,typescript,java,go,rust,cpp,csharp,php,ruby"
+    severity_threshold:
+      description: "Minimum severity level for posting comments (low, medium, high)"
+      type: string
+      default: "medium"
+    include_patterns:
+      description: "Comma-separated list of file patterns to include"
+      type: string
+      default: ""
+    exclude_patterns:
+      description: "Comma-separated list of file patterns to exclude"
+      type: string
+      default: "node_modules/,vendor/,dist/,build/,*.min.js,*.bundle.js"
+    enable_security_scan:
+      description: "Enable security vulnerability scanning"
+      type: boolean
+      default: true
+    enable_performance_hints:
+      description: "Enable performance optimization suggestions"
+      type: boolean
+      default: true
+    post_mr_comments:
+      description: "Post review comments on merge request"
+      type: boolean
+      default: true
+    generate_report:
+      description: "Generate detailed review report as artifact"
+      type: boolean
+      default: true
+
+---
+
+.ai-code-review:
+  stage: ai-review
+  image: 
+    name: python:3.11-slim
+  variables:
+    GEMINI_API_KEY: $[[ inputs.gemini_api_key ]]
+    GITLAB_TOKEN: $[[ inputs.gitlab_token ]]
+    REVIEW_SCOPE: $[[ inputs.review_scope ]]
+    MAX_FILES: $[[ inputs.max_files ]]
+    LANGUAGES: $[[ inputs.languages ]]
+    SEVERITY_THRESHOLD: $[[ inputs.severity_threshold ]]
+    INCLUDE_PATTERNS: $[[ inputs.include_patterns ]]
+    EXCLUDE_PATTERNS: $[[ inputs.exclude_patterns ]]
+    ENABLE_SECURITY_SCAN: $[[ inputs.enable_security_scan ]]
+    ENABLE_PERFORMANCE_HINTS: $[[ inputs.enable_performance_hints ]]
+    POST_MR_COMMENTS: $[[ inputs.post_mr_comments ]]
+    GENERATE_REPORT: $[[ inputs.generate_report ]]
+    # GitLab CI predefined variables
+    CI_PROJECT_ID: $CI_PROJECT_ID
+    CI_MERGE_REQUEST_IID: $CI_MERGE_REQUEST_IID
+    CI_COMMIT_SHA: $CI_COMMIT_SHA
+    CI_PROJECT_URL: $CI_PROJECT_URL
+    GITLAB_USER_LOGIN: $GITLAB_USER_LOGIN
+  before_script:
+    - apt-get update && apt-get install -y git curl
+    - pip install --upgrade pip
+    - pip install -r /scripts/requirements.txt
+  script:
+    - |
+      echo "🚀 Starting AI-Powered Code Review..."
+      echo "Project ID: $CI_PROJECT_ID"
+      echo "MR IID: $CI_MERGE_REQUEST_IID"
+      echo "Commit SHA: $CI_COMMIT_SHA"
+      
+      # Copy scripts to current directory
+      cp -r /scripts/* .
+      
+      # Run the AI code review
+      python ai_reviewer.py
+      
+      echo "✅ AI Code Review completed!"
+  artifacts:
+    reports:
+      junit: ai-review-results.xml
+    paths:
+      - ai-review-report.html
+      - ai-review-summary.json
+      - ai-review-results.xml
+    expire_in: 30 days
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: on_success
+    - when: never
+  allow_failure: true 

@@ -1,0 +1,33 @@
+stages:
+  - ai-review
+  - test
+  - deploy
+
+# Include the AI Code Review component
+include:
+  - component: gitlab.com/your-namespace/ai-code-review/ai-review@main
+
+# Basic AI Code Review job
+ai-code-review:
+  extends: .ai-code-review
+  variables:
+    GEMINI_API_KEY: $GEMINI_API_KEY
+    GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: on_success
+
+# Your existing pipeline stages continue normally
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+deploy:
+  stage: deploy  
+  script:
+    - echo "Deploying application..."
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main" 

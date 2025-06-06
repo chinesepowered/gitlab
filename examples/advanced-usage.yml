@@ -1,0 +1,82 @@
+stages:
+  - security-review
+  - performance-review  
+  - test
+  - deploy
+
+include:
+  - component: gitlab.com/your-namespace/ai-code-review/ai-review@main
+
+# Security-focused review for critical files
+security-review:
+  extends: .ai-code-review
+  stage: security-review
+  variables:
+    GEMINI_API_KEY: $GEMINI_API_KEY
+    GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+    REVIEW_SCOPE: "changed"
+    SEVERITY_THRESHOLD: "low"
+    INCLUDE_PATTERNS: "src/,lib/,config/"
+    EXCLUDE_PATTERNS: "tests/,docs/,node_modules/"
+    ENABLE_SECURITY_SCAN: "true"
+    ENABLE_PERFORMANCE_HINTS: "false"
+    LANGUAGES: "python,javascript,typescript,java"
+    MAX_FILES: "20"
+  rules:
+    - if: $CI_MERGE_REQUEST_IID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+  allow_failure: false
+
+# Performance-focused review
+performance-review:
+  extends: .ai-code-review  
+  stage: performance-review
+  variables:
+    GEMINI_API_KEY: $GEMINI_API_KEY
+    GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+    REVIEW_SCOPE: "changed"
+    SEVERITY_THRESHOLD: "medium"
+    ENABLE_SECURITY_SCAN: "false"
+    ENABLE_PERFORMANCE_HINTS: "true"
+    LANGUAGES: "python,javascript,go"
+    INCLUDE_PATTERNS: "src/api/,src/services/"
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - "src/api/**/*"
+        - "src/services/**/*"
+  allow_failure: true
+
+# Full codebase review (scheduled)
+full-codebase-review:
+  extends: .ai-code-review
+  variables:
+    GEMINI_API_KEY: $GEMINI_API_KEY
+    GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
+    REVIEW_SCOPE: "all"
+    MAX_FILES: "100"
+    SEVERITY_THRESHOLD: "high"
+    POST_MR_COMMENTS: "false"  # Only generate reports
+    GENERATE_REPORT: "true"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  artifacts:
+    paths:
+      - ai-review-report.html
+      - ai-review-summary.json
+    expire_in: 7 days
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying..."
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+  dependencies:
+    - security-review 
