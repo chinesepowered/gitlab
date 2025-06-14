@@ -19,15 +19,27 @@ This GitLab CI/CD component provides automated, AI-powered code reviews using Go
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 🌟 Google Cloud Deployment (Recommended for Hackathon)
 
-- GitLab project with CI/CD enabled
-- Google Cloud API key with Gemini API access
-- GitLab access token for posting MR comments
+Deploy as a real-time service on Google Cloud:
 
-### Basic Usage
+```bash
+# One-click deployment
+chmod +x deploy/setup-gcp.sh
+./deploy/setup-gcp.sh
+```
 
-Add this component to your `.gitlab-ci.yml`:
+This creates a Cloud Run service that:
+- 🪝 Responds to GitLab webhooks in real-time
+- ⚡ Auto-scales based on demand  
+- 🔐 Uses Google Cloud authentication
+- 📊 Provides monitoring and health checks
+
+**[📖 Full Google Cloud Deployment Guide](docs/GOOGLE_CLOUD_DEPLOYMENT.md)**
+
+### 🔄 Traditional CI/CD Usage
+
+For traditional GitLab CI/CD pipeline integration:
 
 ```yaml
 include:
@@ -42,6 +54,13 @@ ai-code-review:
     GEMINI_API_KEY: $GEMINI_API_KEY
     GITLAB_TOKEN: $GITLAB_ACCESS_TOKEN
 ```
+
+### Prerequisites
+
+- GitLab project with CI/CD enabled
+- Google Cloud project (for hackathon deployment)
+- Google Cloud API key with Gemini API access
+- GitLab access token for posting MR comments
 
 ### Environment Variables
 
@@ -94,3 +113,41 @@ ai-code-review:
 - **Performance**: Performance bottlenecks and optimizations
 - **Logic**: Potential bugs and logical errors
 - **Documentation**: Missing or inadequate documentation
+
+## 🤝 Contributing
+
+This project is part of the GitLab Hackathon and contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a merge request
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## 🏆 GitLab Hackathon
+
+This component is designed for submission to the GitLab CI/CD Catalog as part of the GitLab Hackathon initiative to enhance the GitLab ecosystem with AI-powered tools.
+
+### 🌟 Hackathon Features
+
+- ✅ **Google Cloud Native**: Deployed on Google Cloud Run with auto-scaling
+- ✅ **Real-time Integration**: Webhook-based immediate code reviews
+- ✅ **Production Ready**: Health checks, monitoring, and comprehensive logging
+- ✅ **Cost Efficient**: Pay-per-use serverless architecture
+- ✅ **Dual Mode**: Supports both CI/CD jobs and real-time webhook processing
+- ✅ **Advanced AI**: Powered by Google's Gemini 2.5 Flash model
+
+### 🚀 Deployment Options
+
+1. **Google Cloud Run**: Real-time webhook service (recommended for hackathon)
+2. **GitLab CI/CD**: Traditional pipeline integration
+3. **Hybrid**: Use both modes for maximum flexibility
+
+**[🚀 Deploy to Google Cloud](docs/GOOGLE_CLOUD_DEPLOYMENT.md)**
+
+---
+
+**Made with ❤️ for the GitLab Community**

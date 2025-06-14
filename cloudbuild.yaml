@@ -1,0 +1,94 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/ai-code-review:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/ai-code-review:latest'
+      - '.'
+    id: 'build-image'
+
+  # Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/ai-code-review:$COMMIT_SHA'
+    id: 'push-image-sha'
+    waitFor: ['build-image']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/ai-code-review:latest'
+    id: 'push-image-latest'
+    waitFor: ['build-image']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ai-code-review'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/ai-code-review:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--service-account'
+      - 'ai-code-reviewer@$PROJECT_ID.iam.gserviceaccount.com'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '1'
+      - '--timeout'
+      - '3600'
+      - '--max-instances'
+      - '10'
+      - '--set-env-vars'
+      - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID'
+    id: 'deploy-cloud-run'
+    waitFor: ['push-image-sha']
+
+  # Create GitLab CI component release
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Creating component release for GitLab CI/CD Catalog..."
+        echo "Image: gcr.io/$PROJECT_ID/ai-code-review:$COMMIT_SHA"
+        echo "Cloud Run URL: https://ai-code-review-$$(gcloud config get-value project)-uc.a.run.app"
+        
+        # Update template.yml with the correct image
+        sed -i "s|python:3.11-slim|gcr.io/$PROJECT_ID/ai-code-review:$COMMIT_SHA|g" template.yml
+        
+        echo "✅ Component ready for GitLab CI/CD Catalog submission"
+    id: 'prepare-component'
+    waitFor: ['deploy-cloud-run']
+
+# Store build artifacts
+artifacts:
+  objects:
+    location: 'gs://$PROJECT_ID-artifacts'
+    paths:
+      - 'template.yml'
+      - 'catalog-info.yml'
+      - 'README.md'
+
+# Build configuration
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+# Build timeout
+timeout: '1800s'
+
+# Substitutions
+substitutions:
+  _REGION: 'us-central1'
+  _SERVICE_NAME: 'ai-code-review' 

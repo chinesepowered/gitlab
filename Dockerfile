@@ -22,9 +22,18 @@ RUN chmod +x /scripts/*.py
 
 # Create non-root user
 RUN useradd -m -u 1000 reviewer && \
-    chown -R reviewer:reviewer /scripts
+    chown -R reviewer:reviewer /scripts && \
+    chown -R reviewer:reviewer /app
 
 USER reviewer
 
-# Set entrypoint
-ENTRYPOINT ["python", "/scripts/ai_reviewer.py"] 
+# Expose port for Cloud Run
+EXPOSE 8080
+
+# Set environment variables
+ENV PORT=8080
+ENV PYTHONPATH=/scripts
+
+# Support both modes: CI/CD job mode and web server mode
+# Default to web server for Cloud Run, but can be overridden for CI/CD
+CMD ["python", "/scripts/web_server.py"] 
