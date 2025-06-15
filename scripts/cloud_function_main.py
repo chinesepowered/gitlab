@@ -133,13 +133,23 @@ def handle_gitlab_webhook(request: Request):
             }), 200
         
         # Set up environment for the reviewer
+        # Try multiple ways to get commit SHA
+        commit_sha = (
+            mr_data.get('last_commit', {}).get('id') or
+            mr_data.get('sha') or
+            mr_data.get('merge_commit_sha') or
+            ''
+        )
+        
         review_env = {
             'CI_PROJECT_ID': str(project_id),
             'CI_MERGE_REQUEST_IID': str(mr_iid),
-            'CI_COMMIT_SHA': mr_data.get('last_commit', {}).get('id', ''),
+            'CI_COMMIT_SHA': commit_sha,
             'CI_PROJECT_URL': webhook_data.get('project', {}).get('web_url', ''),
             'GITLAB_USER_LOGIN': mr_data.get('author', {}).get('username', 'webhook-user')
         }
+        
+        logger.info(f"🔧 Using commit SHA: {commit_sha or 'HEAD (fallback)'}")
         
         # Override environment variables
         for key, value in review_env.items():

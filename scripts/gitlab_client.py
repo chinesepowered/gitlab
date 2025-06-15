@@ -45,12 +45,21 @@ class GitLabClient:
     def get_changed_files(self, merge_request_iid: str) -> List[Dict[str, Any]]:
         """Get list of changed files in a merge request"""
         try:
+            logger.info(f"🔍 Fetching MR {merge_request_iid} from GitLab API...")
             mr = self.project.mergerequests.get(merge_request_iid)
+            logger.info(f"📋 MR found: '{mr.title}' by {mr.author.get('name', 'unknown')}")
+            logger.info(f"🌿 Source: {mr.source_branch} → Target: {mr.target_branch}")
+            
+            logger.info(f"📊 Getting changes for MR {merge_request_iid}...")
             changes = mr.changes()
+            logger.info(f"📦 Changes object keys: {list(changes.keys())}")
+            
+            raw_changes = changes.get('changes', [])
+            logger.info(f"🔢 Raw changes count: {len(raw_changes)}")
             
             files = []
-            for change in changes.get('changes', []):
-                files.append({
+            for i, change in enumerate(raw_changes):
+                file_info = {
                     'old_path': change.get('old_path'),
                     'new_path': change.get('new_path'),
                     'new_file': change.get('new_file', False),
@@ -58,13 +67,25 @@ class GitLabClient:
                     'deleted_file': change.get('deleted_file', False),
                     'diff': change.get('diff', ''),
                     'change': change
-                })
+                }
+                files.append(file_info)
                 
-            logger.info(f"Found {len(files)} changed files in MR {merge_request_iid}")
+                # Log details for first few files
+                if i < 3:
+                    path = file_info['new_path'] or file_info['old_path'] or 'unknown'
+                    status = []
+                    if file_info['new_file']: status.append('NEW')
+                    if file_info['deleted_file']: status.append('DELETED')
+                    if file_info['renamed_file']: status.append('RENAMED')
+                    status_str = f" ({', '.join(status)})" if status else ""
+                    logger.info(f"  📄 File {i+1}: {path}{status_str}")
+                
+            logger.info(f"✅ Found {len(files)} changed files in MR {merge_request_iid}")
             return files
             
         except Exception as e:
-            logger.error(f"Error getting changed files for MR {merge_request_iid}: {str(e)}")
+            logger.error(f"❌ Error getting changed files for MR {merge_request_iid}: {str(e)}")
+            logger.error(f"   Exception type: {type(e).__name__}")
             return []
     
     def get_all_project_files(self, path: str = "", max_files: int = 100) -> List[Dict[str, Any]]:
@@ -91,6 +112,7 @@ class GitLabClient:
     def get_file_content(self, file_path: str, ref: str = 'HEAD') -> Optional[str]:
         """Get content of a specific file"""
         try:
+            logger.info(f"🔍 Getting file content for {file_path} at ref: {ref}")
             file_data = self.project.files.get(file_path=file_path, ref=ref)
             
             # Decode base64 content
@@ -99,10 +121,26 @@ class GitLabClient:
             else:
                 content = file_data.content
                 
+            logger.info(f"✅ Successfully retrieved {len(content)} characters from {file_path}")
             return content
             
         except Exception as e:
-            logger.error(f"Error getting file content for {file_path}: {str(e)}")
+            logger.error(f"❌ Error getting file content for {file_path} at ref {ref}: {str(e)}")
+            
+            # Try fallback strategies
+            if ref != 'HEAD':
+                logger.info(f"🔄 Trying fallback: getting {file_path} from HEAD")
+                try:
+                    file_data = self.project.files.get(file_path=file_path, ref='HEAD')
+                    if file_data.encoding == 'base64':
+                        content = base64.b64decode(file_data.content).decode('utf-8', errors='ignore')
+                    else:
+                        content = file_data.content
+                    logger.info(f"✅ Fallback successful: retrieved {len(content)} characters from {file_path}")
+                    return content
+                except Exception as fallback_error:
+                    logger.error(f"❌ Fallback also failed: {str(fallback_error)}")
+            
             return None
     
     def get_merge_request_info(self, merge_request_iid: str) -> Optional[Dict[str, Any]]:

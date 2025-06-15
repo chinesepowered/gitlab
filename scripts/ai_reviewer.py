@@ -84,13 +84,32 @@ class AICodeReviewer:
             logger.warning("No merge request found, skipping review")
             return []
             
+        logger.info(f"🔍 Getting files for MR {self.config['ci_merge_request_iid']} (scope: {self.config['review_scope']})")
+        
         if self.config['review_scope'] == 'changed':
             files = self.gitlab_client.get_changed_files(self.config['ci_merge_request_iid'])
+            logger.info(f"📁 GitLab API returned {len(files)} changed files")
         else:
             files = self.gitlab_client.get_all_project_files()
+            logger.info(f"📁 GitLab API returned {len(files)} total files")
+            
+        # Log file details for debugging
+        for i, file_info in enumerate(files[:5]):  # Log first 5 files
+            file_path = file_info.get('new_path') or file_info.get('path', 'unknown')
+            logger.info(f"  File {i+1}: {file_path}")
+            
+        if len(files) > 5:
+            logger.info(f"  ... and {len(files) - 5} more files")
             
         # Filter files based on patterns and languages
+        logger.info(f"🔧 Applying filters (languages: {self.config['languages']}, exclude: {self.config['exclude_patterns']})")
         filtered_files = self._filter_files(files)
+        logger.info(f"✅ After filtering: {len(filtered_files)} files remain")
+        
+        # Log filtered file details
+        for i, file_info in enumerate(filtered_files[:3]):  # Log first 3 filtered files
+            file_path = file_info.get('new_path') or file_info.get('path', 'unknown')
+            logger.info(f"  Filtered file {i+1}: {file_path}")
         
         # Limit number of files
         if len(filtered_files) > self.config['max_files']:
@@ -165,8 +184,9 @@ class AICodeReviewer:
         file_path = file_info['new_path'] if 'new_path' in file_info else file_info['path']
         
         try:
-            # Get file content
-            file_content = self.gitlab_client.get_file_content(file_path, self.config['ci_commit_sha'])
+            # Get file content - use HEAD if commit SHA is invalid
+            commit_ref = self.config['ci_commit_sha'] if self.config['ci_commit_sha'] else 'HEAD'
+            file_content = self.gitlab_client.get_file_content(file_path, commit_ref)
             if not file_content:
                 logger.warning(f"Could not retrieve content for {file_path}")
                 return None
