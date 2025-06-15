@@ -1,0 +1,18 @@
+runtime: python311
+
+env_variables:
+  GEMINI_API_KEY: "your-gemini-api-key-here"
+  GITLAB_TOKEN: "your-gitlab-token-here"
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.6
+
+resources:
+  cpu: 1
+  memory_gb: 1
+
+handlers:
+- url: /.*
+  script: auto 

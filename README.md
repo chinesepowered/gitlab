@@ -21,21 +21,25 @@ This GitLab CI/CD component provides automated, AI-powered code reviews using Go
 
 ### 🌟 Google Cloud Deployment (Recommended for Hackathon)
 
-Deploy as a real-time service on Google Cloud:
+**💡 Super Simple (No Docker Required!):**
+```powershell
+# One-command deployment using Cloud Functions
+.\deploy\simple-deploy.ps1
+```
 
+**🔧 Advanced (Docker + Cloud Run):**
 ```bash
-# One-click deployment
+# Full-featured deployment with Docker
 chmod +x deploy/setup-gcp.sh
 ./deploy/setup-gcp.sh
 ```
 
-This creates a Cloud Run service that:
-- 🪝 Responds to GitLab webhooks in real-time
-- ⚡ Auto-scales based on demand  
-- 🔐 Uses Google Cloud authentication
-- 📊 Provides monitoring and health checks
+**🚀 Choose Your Deployment:**
+- **Cloud Functions**: Simplest, no Docker needed, pay-per-request
+- **Cloud Run**: Advanced features, auto-scaling containers
+- **App Engine**: Traditional web app deployment
 
-**[📖 Full Google Cloud Deployment Guide](docs/GOOGLE_CLOUD_DEPLOYMENT.md)**
+**[📖 Simple Deployment Guide](deploy/simple-cloud-functions.md)** | **[📖 Advanced Guide](docs/GOOGLE_CLOUD_DEPLOYMENT.md)**
 
 ### 🔄 Traditional CI/CD Usage
 
