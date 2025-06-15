@@ -1,4 +1,4 @@
-# AI-Powered Code Review for GitLab CI/CD
+# AI Code Review for GitLab CI/CD
 
 🚀 **GitLab Hackathon Submission** - An intelligent code review component powered by Google's Gemini 2.5 Flash model for GitLab CI/CD pipelines.
 
@@ -30,7 +30,7 @@ This GitLab CI/CD component provides automated, AI-powered code reviews using Go
 #### **Step 1: Get Your API Keys**
 
 **Gemini API Key:**
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+1. Go to [Google AI Studio](https://aistudio.google.com)
 2. Create a new API key
 3. Copy the key (starts with `AIza...`)
 
