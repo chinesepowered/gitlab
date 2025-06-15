@@ -2,6 +2,34 @@
 
 🚀 **GitLab Hackathon Submission** - An intelligent code review component powered by Google's Gemini 2.5 Flash model for GitLab CI/CD pipelines.
 
+---
+
+## 🎬 **Demo & Presentation** (For Judges)
+
+### 📺 **Live Demo Video**
+[![AI Code Review Demo](https://img.shields.io/badge/▶️_Watch_Demo-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/n8z1rR6C6OA)
+
+### 📊 **Presentation Slides**
+[![Presentation](https://img.shields.io/badge/📊_View_Slides-Canva-blue?style=for-the-badge&logo=canva)](https://www.canva.com/design/DAGqZxd0zbo/VJCZ8SGIs6_bgfTLuEPcAQ/edit?utm_content=DAGqZxd0zbo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+### 🌐 **Live Webhook Service**
+```
+https://us-west2-hack-458102.cloudfunctions.net/ai-code-review
+```
+*Production-ready Google Cloud Function endpoint for real-time AI code reviews*
+
+### 📸 **Screenshots**
+
+#### **AI Code Review in Action**
+![AI Code Review Screenshot 1](/public/screen1.jpg)
+*Real-time AI analysis providing intelligent feedback on merge requests*
+
+#### **Detailed Code Analysis**
+![AI Code Review Screenshot 2](/public/screen2.jpg)
+*Comprehensive security and quality assessment with actionable suggestions*
+
+---
+
 ## 🌟 Overview
 
 This GitLab CI/CD component provides automated, AI-powered code reviews using Google's Gemini 2.5 Flash model. It analyzes code changes in merge requests and provides intelligent feedback on code quality, potential issues, security vulnerabilities, and improvement suggestions.
