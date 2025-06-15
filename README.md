@@ -21,6 +21,63 @@ This GitLab CI/CD component provides automated, AI-powered code reviews using Go
 
 ### 🌟 Google Cloud Deployment (Recommended for Hackathon)
 
+#### **Prerequisites**
+1. **Google Cloud Project** with billing enabled
+2. **Google Cloud CLI** installed and authenticated
+3. **Gemini API Key** from Google AI Studio
+4. **GitLab Access Token** with `api` and `read_repository` scopes
+
+#### **Step 1: Get Your API Keys**
+
+**Gemini API Key:**
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Copy the key (starts with `AIza...`)
+
+**GitLab Access Token:**
+1. GitLab → User Settings → Access Tokens
+2. Create token with scopes: `api`, `read_repository`
+3. Copy the token (starts with `glpat-...`)
+
+#### **Step 2: Deploy to Google Cloud**
+
+**🚀 One-Command Deployment:**
+```bash
+gcloud functions deploy ai-code-review \
+  --gen2 \
+  --runtime=python311 \
+  --trigger=http \
+  --entry-point=webhook_handler \
+  --source=scripts/ \
+  --allow-unauthenticated \
+  --set-env-vars="GEMINI_API_KEY=YOUR_GEMINI_KEY,GITLAB_TOKEN=YOUR_GITLAB_TOKEN" \
+  --memory=1GB \
+  --timeout=540s \
+  --max-instances=10 \
+  --region=us-west1
+```
+
+**⚠️ Important:** Use `us-west1` or `us-central1` regions for full Gemini API support.
+
+#### **Step 3: Configure GitLab Webhook**
+
+1. **Go to your GitLab project** → Settings → Webhooks
+2. **Add webhook:**
+   - **URL**: `https://us-west1-YOUR_PROJECT_ID.cloudfunctions.net/ai-code-review`
+   - **Triggers**: ✅ Merge request events
+   - **SSL verification**: ✅ Enable
+3. **Test webhook**: Click "Test" → "Merge request events"
+
+#### **Step 4: Test Your Setup**
+
+1. **Create a merge request** with code changes
+2. **Check the function logs** in Google Cloud Console
+3. **Look for AI comments** in your GitLab MR
+
+**🎉 You're done! AI reviews will now appear automatically on merge requests.**
+
+### 🔧 Alternative Deployment Options
+
 **💡 Super Simple (No Docker Required!):**
 ```powershell
 # One-command deployment using Cloud Functions
@@ -40,6 +97,39 @@ chmod +x deploy/setup-gcp.sh
 - **App Engine**: Traditional web app deployment
 
 **[📖 Simple Deployment Guide](deploy/simple-cloud-functions.md)** | **[📖 Advanced Guide](docs/GOOGLE_CLOUD_DEPLOYMENT.md)**
+
+## 🔧 Troubleshooting
+
+### **Common Issues**
+
+#### **❌ "User location is not supported for the API use"**
+- **Cause**: Gemini API geographic restrictions
+- **Fix**: Deploy to US regions (`us-west1`, `us-central1`, `us-east1`)
+
+#### **❌ "404 Commit Not Found"**
+- **Cause**: Invalid commit SHA in webhook
+- **Fix**: Ensure GitLab webhook is properly configured with real MR events
+
+#### **❌ "No files to review"**
+- **Cause**: Empty merge request or unsupported file types
+- **Fix**: Add code files (.py, .js, .ts, .java, .go, etc.) to your MR
+
+#### **❌ "GitLab API errors"**
+- **Cause**: Insufficient token permissions
+- **Fix**: Ensure GitLab token has `api` and `read_repository` scopes
+
+### **Debugging Steps**
+
+1. **Check function logs**: Google Cloud Console → Cloud Functions → Logs
+2. **Test webhook**: GitLab → Settings → Webhooks → Test
+3. **Verify API keys**: Ensure both Gemini and GitLab tokens are valid
+4. **Check file types**: Only supported languages are reviewed
+
+### **Supported Languages**
+- Python (`.py`), JavaScript (`.js`), TypeScript (`.ts`)
+- Java (`.java`), Go (`.go`), Rust (`.rs`)
+- C++ (`.cpp`, `.hpp`), C# (`.cs`), PHP (`.php`)
+- Ruby (`.rb`), HTML, CSS, YAML, JSON, SQL, Shell
 
 ### 🔄 Traditional CI/CD Usage
 

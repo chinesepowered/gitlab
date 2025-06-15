@@ -1,0 +1,236 @@
+Observability Scopes
+hack
+Logs Explorer
+Search all fields
+1234resource.type = "cloud_run_revision"resource.labels.service_name = "ai-code-review"resource.labels.location = "us-west2" severity>=DEFAULT
+resource.type = "cloud_run_revision"
+resource.labels.service_name = "ai-code-review"
+resource.labels.location = "us-west2"
+ severity>=DEFAULT
+Language: 
+LQL
+Fields
+Search fields and values
+System Metadata
+Severity
+108
+Showing top 3 of 3 values
+Location
+Showing top 1 of 1 value
+Resource type
+Showing top 1 of 1 value
+Timeline
+0
+200
+8:00 PM
+8:10 PM
+8:20 PM
+8:30 PM
+8:40 PM
+8:50 PM
+9:00 PM
+108 results
+Severity
+Time
+Summary
+Showing logs for last 1 hour from 6/14/25, 7:59 PM to 6/14/25, 8:59 PM.
+2025-06-14 20:59:26.952
+                    506959a                                                     
+2025-06-14 20:59:26.955
+           INFO     Starting AI review for MR 2 in    cloud_function_main.py:158
+2025-06-14 20:59:26.955
+                    project 70831895                                            
+2025-06-14 20:59:27.757
+[03:59:27] INFO     Connected to GitLab project: hackathon   gitlab_client.py:39
+2025-06-14 20:59:27.789
+╭───────────────────────────╮
+2025-06-14 20:59:27.789
+│ 🤖 AI-Powered Code Review │
+2025-06-14 20:59:27.789
+╰───────────────────────────╯
+2025-06-14 20:59:27.790
+📁 Analyzing files to review...
+2025-06-14 20:59:27.792
+           INFO     🔍 Getting files for MR 2 (scope: changed) ai_reviewer.py:87
+2025-06-14 20:59:27.794
+           INFO     🔍 Fetching MR 2 from GitLab API...      gitlab_client.py:48
+2025-06-14 20:59:28.180
+[03:59:28] INFO     📋 MR found: 'mergUpdate file main.py'   gitlab_client.py:50
+2025-06-14 20:59:28.180
+                    by Chineseman Lai                                           
+2025-06-14 20:59:28.181
+           INFO     🌿 Source: merge2 → Target: main         gitlab_client.py:51
+2025-06-14 20:59:28.183
+           INFO     📊 Getting changes for MR 2...           gitlab_client.py:53
+2025-06-14 20:59:28.665
+           INFO     📦 Changes object keys: ['id', 'iid',    gitlab_client.py:55
+2025-06-14 20:59:28.665
+                    'project_id', 'title', 'description',                       
+2025-06-14 20:59:28.665
+                    'state', 'created_at', 'updated_at',                        
+2025-06-14 20:59:28.665
+                    'merged_by', 'merge_user', 'merged_at',                     
+2025-06-14 20:59:28.665
+                    'closed_by', 'closed_at',                                   
+2025-06-14 20:59:28.665
+                    'target_branch', 'source_branch',                           
+2025-06-14 20:59:28.665
+                    'user_notes_count', 'upvotes',                              
+2025-06-14 20:59:28.665
+                    'downvotes', 'author', 'assignees',                         
+2025-06-14 20:59:28.665
+                    'assignee', 'reviewers',                                    
+2025-06-14 20:59:28.665
+                    'source_project_id',                                        
+2025-06-14 20:59:28.665
+                    'target_project_id', 'labels', 'draft',                     
+2025-06-14 20:59:28.665
+                    'imported', 'imported_from',                                
+2025-06-14 20:59:28.665
+                    'work_in_progress', 'milestone',                            
+2025-06-14 20:59:28.665
+                    'merge_when_pipeline_succeeds',                             
+2025-06-14 20:59:28.665
+                    'merge_status', 'detailed_merge_status',                    
+2025-06-14 20:59:28.665
+                    'merge_after', 'sha',                                       
+2025-06-14 20:59:28.665
+                    'merge_commit_sha', 'squash_commit_sha',                    
+2025-06-14 20:59:28.665
+                    'discussion_locked',                                        
+2025-06-14 20:59:28.665
+                    'should_remove_source_branch',                              
+2025-06-14 20:59:28.665
+                    'force_remove_source_branch',                               
+2025-06-14 20:59:28.665
+                    'prepared_at', 'reference',                                 
+2025-06-14 20:59:28.665
+                    'references', 'web_url', 'time_stats',                      
+2025-06-14 20:59:28.665
+                    'squash', 'squash_on_merge',                                
+2025-06-14 20:59:28.665
+                    'task_completion_status',                                   
+2025-06-14 20:59:28.665
+                    'has_conflicts',                                            
+2025-06-14 20:59:28.665
+                    'blocking_discussions_resolved',                            
+2025-06-14 20:59:28.665
+                    'approvals_before_merge', 'subscribed',                     
+2025-06-14 20:59:28.665
+                    'changes_count',                                            
+2025-06-14 20:59:28.665
+                    'latest_build_started_at',                                  
+2025-06-14 20:59:28.665
+                    'latest_build_finished_at',                                 
+2025-06-14 20:59:28.665
+                    'first_deployed_to_production_at',                          
+2025-06-14 20:59:28.665
+                    'pipeline', 'head_pipeline',                                
+2025-06-14 20:59:28.665
+                    'diff_refs', 'merge_error', 'user',                         
+2025-06-14 20:59:28.665
+                    'changes', 'overflow']                                      
+2025-06-14 20:59:28.667
+           INFO     🔢 Raw changes count: 1                  gitlab_client.py:58
+2025-06-14 20:59:28.668
+           INFO       📄 File 1: main.py (NEW)               gitlab_client.py:81
+2025-06-14 20:59:28.670
+           INFO     ✅ Found 1 changed files in MR 2         gitlab_client.py:83
+2025-06-14 20:59:28.671
+           INFO     📁 GitLab API returned 1 changed files     ai_reviewer.py:91
+2025-06-14 20:59:28.673
+           INFO       File 1: main.py                          ai_reviewer.py:99
+2025-06-14 20:59:28.675
+           INFO     🔧 Applying filters (languages: [],       ai_reviewer.py:105
+2025-06-14 20:59:28.675
+                    exclude: [])                                                
+2025-06-14 20:59:28.676
+           INFO     ✅ After filtering: 1 files remain        ai_reviewer.py:107
+2025-06-14 20:59:28.677
+           INFO       Filtered file 1: main.py                ai_reviewer.py:112
+2025-06-14 20:59:28.678
+📋 Found 1 files to review
+2025-06-14 20:59:28.679
+    Files to Review     
+2025-06-14 20:59:28.679
+┏━━━━━━━━━━━┳━━━━━━━━━━┓
+2025-06-14 20:59:28.679
+┃ File Path ┃ Status   ┃
+2025-06-14 20:59:28.679
+┡━━━━━━━━━━━╇━━━━━━━━━━┩
+2025-06-14 20:59:28.679
+│ main.py   │ Modified │
+2025-06-14 20:59:28.679
+└───────────┴──────────┘
+2025-06-14 20:59:28.680
+🔍 Starting AI code review...
+2025-06-14 20:59:28.683
+           INFO     🔍 Getting file content for main.py at  gitlab_client.py:115
+2025-06-14 20:59:28.683
+                    ref:                                                        
+2025-06-14 20:59:28.683
+                    b64f1f489b4fa9def6ec05f219e9633e2506959                     
+2025-06-14 20:59:28.683
+                    a                                                           
+2025-06-14 20:59:28.896
+           INFO     ✅ Successfully retrieved 15889         gitlab_client.py:124
+2025-06-14 20:59:28.896
+                    characters from main.py                                     
+2025-06-14 20:59:28.897
+           INFO     Reviewing main.py with Gemini 2.5 Flash  gemini_client.py:72
+2025-06-14 20:59:39.241
+[03:59:39] ERROR    Failed to parse JSON response for        gemini_client.py:86
+2025-06-14 20:59:39.241
+                    main.py: Expecting value: line 1 column                     
+2025-06-14 20:59:39.241
+                    1 (char 0)                                                  
+2025-06-14 20:59:39.243
+  Reviewing main.py
+2025-06-14 20:59:39.243
+✅ Reviewed 1 files successfully
+2025-06-14 20:59:39.244
+💬 Posting review comments...
+2025-06-14 20:59:39.846
+           INFO     Posted comment on MR 2                  gitlab_client.py:188
+2025-06-14 20:59:40.579
+[03:59:40] INFO     Posted comment on MR 2                  gitlab_client.py:188
+2025-06-14 20:59:41.380
+[03:59:41] INFO     Posted comment on MR 2                  gitlab_client.py:188
+2025-06-14 20:59:41.381
+✅ Comments posted to merge request
+2025-06-14 20:59:41.381
+📊 Generating review reports...
+
+2025-06-14 20:59:41.384
+           INFO     JSON report generated:               report_generator.py:122
+2025-06-14 20:59:41.384
+                    ai-review-summary.json                                      
+2025-06-14 20:59:41.386
+           INFO     HTML report generated:               report_generator.py:158
+2025-06-14 20:59:41.386
+                    ai-review-report.html                                       
+2025-06-14 20:59:41.405
+           INFO     JUnit XML report generated:          report_generator.py:214
+2025-06-14 20:59:41.405
+                    ai-review-results.xml                                       
+2025-06-14 20:59:41.407
+           INFO     All reports generated successfully    report_generator.py:40
+2025-06-14 20:59:41.407
+✅ Reports generated
+2025-06-14 20:59:41.408
+🎉 AI Code Review completed in 13.62 seconds!
+2025-06-14 20:59:41.408
+📈 Generated 11 review comments
+2025-06-14 20:59:41.410
+           INFO     ✅ Review completed for MR 2 in   cloud_function_main.py:164
+2025-06-14 20:59:41.410
+                    project 70831895                                            
+2025-06-14 20:59:41.918
+/layers/google.python.pip/pip/lib/python3.11/site-packages/gunicorn/util.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+2025-06-14 20:59:41.918
+  import pkg_resources
+2025-06-14 20:59:41.993
+Default STARTUP TCP probe succeeded after 1 attempt for container "worker" on port 8080.
+Showing logs for last 1 hour from 6/14/25, 8:00 PM to 6/14/25, 9:00 PM.
+
+
