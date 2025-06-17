@@ -16,7 +16,14 @@
 ```
 https://us-west2-hack-458102.cloudfunctions.net/ai-code-review
 ```
-*Production-ready Google Cloud Function endpoint for real-time AI code reviews*
+*Production-ready Google Cloud Function endpoint for real-time AI code reviews (linked to my Gitlab, deploy your own from below)*
+
+### 🌐 **Example Gitlab Merge Request**
+```
+https://gitlab.com/chinesepowered/hackathon/-/merge_requests/3
+```
+*Example of AI Code Review reviewing a merge request on my Gitlab project*
+
 
 ### 📸 **Screenshots**
 

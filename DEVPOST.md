@@ -22,13 +22,12 @@ https://us-west2-hack-458102.cloudfunctions.net/ai-code-review
 ```
 *Ready-to-use Google Cloud Function for instant AI code reviews (linked to my Gitlab, deploy your own from below)*
 
-### 📸 **Screenshots**
+### 🌐 **Example Gitlab Merge Request**
+```
+https://gitlab.com/chinesepowered/hackathon/-/merge_requests/3
+```
+*Example of AI Code Review reviewing a merge request on my Gitlab project*
 
-![AI Code Review in Action](/public/screen1.png)
-*AI providing real-time intelligent feedback on merge requests*
-
-![Detailed Code Analysis](/public/screen2.png)
-*Comprehensive security and quality assessment with actionable insights*
 
 ## 🚀 **How we built it**
 
@@ -175,13 +174,3 @@ ai-code-review:
 - 💬 **GitLab Native**: Comments appear naturally in merge requests
 - ⚡ **Lightning Fast**: Sub-30-second analysis and feedback
 - 🌐 **Production Ready**: Deployed on Google Cloud with auto-scaling
-
-## 🔗 **Built for GitLab**
-
-This project represents our contribution to the GitLab ecosystem, designed specifically for the GitLab Hackathon. It showcases how modern AI can enhance developer productivity while maintaining the seamless GitLab experience developers love.
-
-**Ready to revolutionize your code reviews? Try it now!**
-
----
-
-**Made with ❤️ for developers everywhere**
