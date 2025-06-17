@@ -28,11 +28,11 @@ https://gitlab.com/chinesepowered/hackathon/-/merge_requests/3
 ### 📸 **Screenshots**
 
 #### **AI Code Review in Action**
-![AI Code Review Screenshot 1](/public/screen1.jpg)
+![AI Code Review Screenshot 1](/public/screen1.png)
 *Real-time AI analysis providing intelligent feedback on merge requests*
 
 #### **Detailed Code Analysis**
-![AI Code Review Screenshot 2](/public/screen2.jpg)
+![AI Code Review Screenshot 2](/public/screen2.png)
 *Comprehensive security and quality assessment with actionable suggestions*
 
 ---
